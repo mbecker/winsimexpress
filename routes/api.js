@@ -275,34 +275,30 @@ router.post("/login", function(req, res, next) {
       const parser = new DOMParser(domParserOptions);
       const xmlDoc = parser.parseFromString(body);
 
-      // "Benutzername" and "Rufnummer"
+      // "Rufnummer"
       const userData = xmlDoc
         .getElementById("userData")
         .getElementsByTagName("p");
-      let benutzername,
-        rufnummer = "";
+      let rufnummer = "";
 
-      const userDataBenutzername = userData
+      const userDataRufnummer = userData
         .item(0)
         .textContent.replace(/ /g, "");
-      if (userDataBenutzername.includes(":")) {
-        benutzername = userDataBenutzername.split(":")[1];
-      }
-
-      const userDataRufnummer = userData.item(1).textContent.replace(/ /g, "");
       if (userDataRufnummer.includes(":")) {
         rufnummer = userDataRufnummer.split(":")[1];
+      } else {
+        rufnummer = userDataRufnummer;
       }
-
-      if (benutzername.length === 0 || rufnummer.length === 0) {
+      rufnummer = rufnummer.replace('&nbsp;', '');
+      
+      if (rufnummer.length === 0) {
         errorMsg = {
-          message: `No Benutzername or Rufummer`,
+          message: `No Rufummer`,
           status: 501
         };
         throw errorMsg;
       }
       const userDataObj = {
-        benutzername: benutzername,
         rufnummer: rufnummer
       };
 
